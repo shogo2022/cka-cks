@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-in-http-cassandra
+  namespace: cassandra
+spec:
+  podSelector:
+    matchLabels:
+      run: cassandra
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          zone: web
+    - podSelector:
+        matchLabels:
+          run: backend
+    ports:
+    - protocol: TCP
+      port: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-out-http-backend
+  namespace: web
+spec:
+  podSelector:
+    matchLabels:
+      run: backend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          zone: db
+    - podSelector:
+        matchLabels:
+          run: cassandra
+    ports:
+      - protocol: TCP
+        port: 80
+
+

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: web
+  labels:
+    zone: web
+spec: {}
+status: {}
